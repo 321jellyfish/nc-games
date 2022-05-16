@@ -6,4 +6,8 @@ app.use(express.json());
 
 app.get("/api/categories", getCategories);
 
+app.use((err, req, res, next) => {
+  res.status(404).send({ msg: "Route Not Found" });
+});
+
 module.exports = app;
