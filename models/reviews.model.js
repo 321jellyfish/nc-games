@@ -10,3 +10,7 @@ exports.fetchReviewsById = (reviewId) => {
       return result.rows[0];
     });
 };
+
+exports.updateReviewVotes = () => {
+  console.log("hello from model");
+};

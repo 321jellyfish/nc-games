@@ -1,12 +1,16 @@
 const express = require("express");
 const { getCategories } = require("./controllers/categories.controller");
-const { getReviewsById } = require("./controllers/reviews.controller");
+const {
+  getReviewsById,
+  patchReviewVotes,
+} = require("./controllers/reviews.controller");
 const app = express();
 
 app.use(express.json());
 
 app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewsById);
+app.patch("/api/reviews/:review_id", patchReviewVotes);
 
 app.use("/*", (request, response, next) => {
   response.status(404).send({ msg: "Not Found" });
