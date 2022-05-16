@@ -8,7 +8,7 @@ beforeEach(() => seed(testData));
 
 afterAll(() => db.end());
 
-describe.only("GET /api/categories", () => {
+describe("GET /api/categories", () => {
   it("status 200: responds with an array of category objects", () => {
     return request(app)
       .get("/api/categories")
@@ -27,6 +27,18 @@ describe.only("GET /api/categories", () => {
             );
           })
         );
+      });
+  });
+});
+
+describe("/* any invalid path", () => {
+  it("status 404: responds with message 'not found'", () => {
+    return request(app)
+      .get("/api/thisiswrong")
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Not Found");
       });
   });
 });
