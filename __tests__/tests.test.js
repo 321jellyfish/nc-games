@@ -51,7 +51,8 @@ describe("GET /api/reviews/:review_id", () => {
       .get(`/api/reviews/${reviewId}`)
       .expect(200)
       .then(({ body }) => {
-        expect(body.review).toEqual({
+        const { review } = body;
+        expect(review).toEqual({
           review_id: reviewId,
           title: "Agricola",
           category: "euro game",
@@ -72,7 +73,7 @@ describe("GET /api/reviews/:review_id", () => {
       .expect(404)
       .then(({ body }) => {
         const { msg } = body;
-        expect(msg).toBe("Not Found");
+        expect(msg).toBe("Review Not Found");
       });
   });
   it("status 400: responds with 400 if passed something that isn't a number", () => {

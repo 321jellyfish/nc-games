@@ -1,4 +1,4 @@
-const { fetchReviewsById } = require("../models/getReviewsById.model");
+const { fetchReviewsById } = require("../models/reviews.model");
 
 exports.getReviewsById = (request, response, next) => {
   const reviewId = request.params.review_id;

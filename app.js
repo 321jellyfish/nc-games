@@ -1,6 +1,6 @@
 const express = require("express");
-const { getCategories } = require("./controllers/getCategories.controller");
-const { getReviewsById } = require("./controllers/getReviewsById.controller");
+const { getCategories } = require("./controllers/categories.controller");
+const { getReviewsById } = require("./controllers/reviews.controller");
 const app = express();
 
 app.use(express.json());
@@ -15,9 +15,10 @@ app.use("/*", (request, response, next) => {
 app.use((error, request, response, next) => {
   if (error.code === "22P02") {
     response.status(400).send({ msg: "Bad Request" });
-  }
-  if (response.status) {
+  } else if (response.status) {
     response.status(error.status).send({ msg: error.msg });
+  } else {
+    response.status(500).send({ msg: "Internal Server Error" });
   }
 });
 
