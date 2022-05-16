@@ -91,7 +91,7 @@ describe("GET /api/reviews/:review_id", () => {
 describe("PATCH /api/reviews/:review_id", () => {
   it("update votes on specified review if sent request body as follows {inc_vote: newVote}", () => {
     const reviewId = 2;
-    const increaseVotes = { inc_votes: 2 };
+    const increaseVotes = { inc_votes: 3 };
     return request(app)
       .patch(`/api/reviews/${reviewId}`)
       .send(increaseVotes)
@@ -107,8 +107,8 @@ describe("PATCH /api/reviews/:review_id", () => {
             "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
           review_body: "Fiddly fun for all the family",
           category: "dexterity",
-          created_at: new Date(1610964101251),
-          votes: 7,
+          created_at: "2021-01-18T10:01:41.251Z",
+          votes: 8,
         });
       });
   });

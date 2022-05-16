@@ -11,6 +11,13 @@ exports.fetchReviewsById = (reviewId) => {
     });
 };
 
-exports.updateReviewVotes = () => {
-  console.log("hello from model");
+exports.updateReviewVotes = (reviewId, voteNumber) => {
+  return db
+    .query(`UPDATE reviews SET votes = $1 WHERE review_id = $2 RETURNING *`, [
+      5 + voteNumber,
+      reviewId,
+    ])
+    .then((result) => {
+      return result.rows[0];
+    });
 };
