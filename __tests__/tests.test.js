@@ -3,6 +3,7 @@ const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
+require("jest-sorted");
 
 beforeEach(() => seed(testData));
 
@@ -44,13 +45,6 @@ describe("GET /api/categories", () => {
       });
   });
 });
-
-// `SELECT   r.*, COUNT(c.comment_id)::int AS comment_count
-// FROM      reviews AS r
-// LEFT JOIN comments AS c
-// ON        c.review_id = r.review_id
-// WHERE     r.review_id = $1
-// GROUP BY  r.review_id`,
 
 describe("GET /api/reviews/:review_id", () => {
   it("status 200: responds with requested review object", () => {
@@ -212,6 +206,44 @@ describe("GET /api/users", () => {
             );
           })
         );
+      });
+  });
+});
+
+describe("GET /api/reviews", () => {
+  it("status 200: responds with an array of review objects", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toHaveLength(13);
+        expect(reviews).toBeInstanceOf(Array);
+        expect(
+          reviews.forEach((review) => {
+            expect(review).toEqual(
+              expect.objectContaining({
+                owner: expect.any(String),
+                title: expect.any(String),
+                review_id: expect.any(Number),
+                category: expect.any(String),
+                review_img_url: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                comment_count: expect.any(Number),
+              })
+            );
+          })
+        );
+      });
+  });
+  it("returns reviews, sorted by date in descending order", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("created_at", { descending: true });
       });
   });
 });
