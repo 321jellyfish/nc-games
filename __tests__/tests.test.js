@@ -88,7 +88,7 @@ describe("GET /api/reviews/:review_id", () => {
   });
 });
 
-describe.only("PATCH /api/reviews/:review_id", () => {
+describe("PATCH /api/reviews/:review_id", () => {
   it("update votes on specified review if sent request body as follows {inc_vote: newVote}", () => {
     const reviewId = 2;
     const increaseVotes = { inc_votes: 3 };
