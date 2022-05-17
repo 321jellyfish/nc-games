@@ -112,7 +112,7 @@ describe.only("PATCH /api/reviews/:review_id", () => {
         });
       });
   });
-  it.only("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
+  it("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
     const tooHighId = 10000;
     return request(app)
       .patch(`/api/reviews/${tooHighId}`)
@@ -120,6 +120,16 @@ describe.only("PATCH /api/reviews/:review_id", () => {
       .then(({ body }) => {
         const { msg } = body;
         expect(msg).toBe("Review Not Found");
+      });
+  });
+  it.only("status 400: responds with 400 if passed something that isn't a number", () => {
+    const notANumber = "wolf";
+    return request(app)
+      .patch(`/api/reviews/${notANumber}`)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
       });
   });
 });
