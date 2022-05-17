@@ -122,10 +122,22 @@ describe.only("PATCH /api/reviews/:review_id", () => {
         expect(msg).toBe("Review Not Found");
       });
   });
-  it.only("status 400: responds with 400 if passed something that isn't a number", () => {
+  it("status 400: responds with 400 if passed something that isn't a number", () => {
     const notANumber = "wolf";
     return request(app)
       .patch(`/api/reviews/${notANumber}`)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  it("status 400: responds with 400 if passed something that isn't a number in votes object", () => {
+    const reviewId = 2;
+    const increaseVotes = { inc_votes: "Tapir" };
+    return request(app)
+      .patch(`/api/reviews/${reviewId}`)
+      .send(increaseVotes)
       .expect(400)
       .then(({ body }) => {
         const { msg } = body;
