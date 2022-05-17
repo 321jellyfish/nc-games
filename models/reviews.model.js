@@ -32,3 +32,7 @@ exports.updateReviewVotes = (reviewId, voteNumber) => {
       return result.rows[0];
     });
 };
+
+exports.fetchReviews = () => {
+  console.log("model");
+};

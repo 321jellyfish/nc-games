@@ -1,6 +1,7 @@
 const {
   fetchReviewsById,
   updateReviewVotes,
+  fetchReviews,
 } = require("../models/reviews.model");
 
 exports.getReviewsById = (request, response, next) => {
@@ -21,4 +22,9 @@ exports.patchReviewVotes = (request, response, next) => {
       response.status(200).send({ review });
     })
     .catch(next);
+};
+
+exports.getReviews = () => {
+  console.log("controller");
+  fetchReviews();
 };
