@@ -268,7 +268,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
         );
       });
   });
-  it.only("status 404: responds with 'No Review Found' if passed a valid number, but one that has no corresponding review", () => {
+  it("status 404: responds with 'No Review Found' if passed a valid number, but one that has no corresponding review", () => {
     const tooHighId = 10000;
     return request(app)
       .get(`/api/reviews/${tooHighId}/comments`)
@@ -276,6 +276,16 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .then(({ body }) => {
         const { msg } = body;
         expect(msg).toBe("Review Not Found");
+      });
+  });
+  it.only("status 400: responds with 'Bad Request' if passed something that isn't a number", () => {
+    const notANumber = "frog";
+    return request(app)
+      .get(`/api/reviews/${notANumber}/comments`)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
       });
   });
 });
