@@ -88,7 +88,7 @@ describe("GET /api/reviews/:review_id", () => {
   });
 });
 
-describe.only("PATCH /api/reviews/:review_id", () => {
+describe("PATCH /api/reviews/:review_id", () => {
   it("update votes on specified review if sent request body as follows {inc_vote: newVote}", () => {
     const reviewId = 2;
     const increaseVotes = { inc_votes: 3 };
@@ -135,6 +135,18 @@ describe.only("PATCH /api/reviews/:review_id", () => {
   it("status 400: responds with 400 if passed something that isn't a number in votes object", () => {
     const reviewId = 2;
     const increaseVotes = { inc_votes: "Tapir" };
+    return request(app)
+      .patch(`/api/reviews/${reviewId}`)
+      .send(increaseVotes)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  it("status 400: responds with 400 if passed something that a votes object without key of inc_votes", () => {
+    const reviewId = 3;
+    const increaseVotes = { votes: 2 };
     return request(app)
       .patch(`/api/reviews/${reviewId}`)
       .send(increaseVotes)
