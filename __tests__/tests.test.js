@@ -45,13 +45,6 @@ describe("GET /api/categories", () => {
   });
 });
 
-// `SELECT   r.*, COUNT(c.comment_id)::int AS comment_count
-// FROM      reviews AS r
-// LEFT JOIN comments AS c
-// ON        c.review_id = r.review_id
-// WHERE     r.review_id = $1
-// GROUP BY  r.review_id`,
-
 describe("GET /api/reviews/:review_id", () => {
   it("status 200: responds with requested review object", () => {
     const reviewId = 1;
