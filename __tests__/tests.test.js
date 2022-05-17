@@ -45,7 +45,7 @@ describe("GET /api/categories", () => {
   });
 });
 describe("GET /api/reviews/:review_id", () => {
-  it.only("status 200: responds with requested review object", () => {
+  it("status 200: responds with requested review object", () => {
     const reviewId = 1;
     return request(app)
       .get(`/api/reviews/${reviewId}`)
@@ -113,7 +113,7 @@ describe("GET /api/reviews/:review_id", () => {
 });
 
 describe("PATCH /api/reviews/:review_id", () => {
-  it("update votes on specified review if sent request body as follows {inc_vote: newVote}", () => {
+  it.only("update votes on specified review if sent request body as follows {inc_vote: newVote}", () => {
     const reviewId = 2;
     const increaseVotes = { inc_votes: 3 };
     return request(app)
