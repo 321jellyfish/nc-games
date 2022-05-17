@@ -29,13 +29,16 @@ exports.fetchReviewsById = (reviewId) => {
       [reviewId]
     )
     .then((result) => {
-      commentCount = +result.rows[0].count;
+      if (result.rows.count) {
+        commentCount = +result.rows[0].count;
+      }
       return db.query(`SELECT * FROM reviews WHERE review_id = $1;`, [
         reviewId,
       ]);
     })
     .then((result) => {
       result.rows[0]["comment_count"] = commentCount;
+      console.log(result.rows[0]);
       return result.rows[0];
     });
 };
