@@ -26,7 +26,7 @@ exports.fetchReviewsById = (reviewId) => {
 };
 
 exports.updateReviewVotes = (reviewId, voteNumber) => {
-  return dbÛ
+  return db
     .query(
       `UPDATE reviews SET votes = votes + $1 WHERE review_id = $2 RETURNING *`,
       [voteNumber, reviewId]

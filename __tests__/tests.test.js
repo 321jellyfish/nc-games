@@ -113,7 +113,7 @@ describe("GET /api/reviews/:review_id", () => {
 });
 
 describe("PATCH /api/reviews/:review_id", () => {
-  it.only("update votes on specified review if sent request body as follows {inc_vote: newVote}", () => {
+  it("update votes on specified review if sent request body as follows {inc_vote: newVote}", () => {
     const reviewId = 2;
     const increaseVotes = { inc_votes: 3 };
     return request(app)
@@ -122,18 +122,20 @@ describe("PATCH /api/reviews/:review_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { review } = body;
-        expect(review).toEqual({
-          review_id: 2,
-          title: "Jenga",
-          designer: "Leslie Scott",
-          owner: "philippaclaire9",
-          review_img_url:
-            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
-          review_body: "Fiddly fun for all the family",
-          category: "dexterity",
-          created_at: "2021-01-18T10:01:41.251Z",
-          votes: 8,
-        });
+        expect(review).toEqual(
+          expect.objectContaining({
+            review_id: 2,
+            title: "Jenga",
+            designer: "Leslie Scott",
+            owner: "philippaclaire9",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            review_body: "Fiddly fun for all the family",
+            category: "dexterity",
+            created_at: "2021-01-18T10:01:41.251Z",
+            votes: 8,
+          })
+        );
       });
   });
   it("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
