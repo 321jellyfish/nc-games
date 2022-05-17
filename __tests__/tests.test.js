@@ -268,4 +268,14 @@ describe("GET /api/reviews/:review_id/comments", () => {
         );
       });
   });
+  it.only("status 404: responds with 'No Review Found' if passed a valid number, but one that has no corresponding review", () => {
+    const tooHighId = 10000;
+    return request(app)
+      .get(`/api/reviews/${tooHighId}/comments`)
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Review Not Found");
+      });
+  });
 });
