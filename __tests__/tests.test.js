@@ -87,3 +87,73 @@ describe("GET /api/reviews/:review_id", () => {
       });
   });
 });
+
+describe("PATCH /api/reviews/:review_id", () => {
+  it("update votes on specified review if sent request body as follows {inc_vote: newVote}", () => {
+    const reviewId = 2;
+    const increaseVotes = { inc_votes: 3 };
+    return request(app)
+      .patch(`/api/reviews/${reviewId}`)
+      .send(increaseVotes)
+      .expect(200)
+      .then(({ body }) => {
+        const { review } = body;
+        expect(review).toEqual({
+          review_id: 2,
+          title: "Jenga",
+          designer: "Leslie Scott",
+          owner: "philippaclaire9",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          review_body: "Fiddly fun for all the family",
+          category: "dexterity",
+          created_at: "2021-01-18T10:01:41.251Z",
+          votes: 8,
+        });
+      });
+  });
+  it("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
+    const tooHighId = 10000;
+    return request(app)
+      .patch(`/api/reviews/${tooHighId}`)
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Review Not Found");
+      });
+  });
+  it("status 400: responds with 400 if passed something that isn't a number as review id", () => {
+    const notANumber = "wolf";
+    return request(app)
+      .patch(`/api/reviews/${notANumber}`)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  it("status 400: responds with 400 if passed something that isn't a number in votes object", () => {
+    const reviewId = 2;
+    const increaseVotes = { inc_votes: "Tapir" };
+    return request(app)
+      .patch(`/api/reviews/${reviewId}`)
+      .send(increaseVotes)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  it("status 400: responds with 400 if passed something that a votes object without key of inc_votes", () => {
+    const reviewId = 3;
+    const increaseVotes = { votes: 2 };
+    return request(app)
+      .patch(`/api/reviews/${reviewId}`)
+      .send(increaseVotes)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+});
