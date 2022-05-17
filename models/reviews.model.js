@@ -18,6 +18,9 @@ exports.updateReviewVotes = (reviewId, voteNumber) => {
       [voteNumber, reviewId]
     )
     .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Review Not Found" });
+      }
       return result.rows[0];
     });
 };

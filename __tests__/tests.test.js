@@ -88,7 +88,7 @@ describe("GET /api/reviews/:review_id", () => {
   });
 });
 
-describe("PATCH /api/reviews/:review_id", () => {
+describe.only("PATCH /api/reviews/:review_id", () => {
   it("update votes on specified review if sent request body as follows {inc_vote: newVote}", () => {
     const reviewId = 2;
     const increaseVotes = { inc_votes: 3 };
@@ -110,6 +110,16 @@ describe("PATCH /api/reviews/:review_id", () => {
           created_at: "2021-01-18T10:01:41.251Z",
           votes: 8,
         });
+      });
+  });
+  it.only("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
+    const tooHighId = 10000;
+    return request(app)
+      .patch(`/api/reviews/${tooHighId}`)
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Review Not Found");
       });
   });
 });
