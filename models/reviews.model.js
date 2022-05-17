@@ -40,7 +40,8 @@ exports.fetchReviews = () => {
       FROM        reviews AS r
       LEFT JOIN   users AS u
       ON          r.owner = u.username
-    
+      ORDER BY    r.created_at
+      DESC
   `
     )
     .then((result) => {
