@@ -13,11 +13,16 @@ exports.fetchReviewsById = (reviewId) => {
 
 exports.updateReviewVotes = (reviewId, voteNumber) => {
   return db
-    .query(`UPDATE reviews SET votes = $1 WHERE review_id = $2 RETURNING *`, [
-      5 + voteNumber,
-      reviewId,
-    ])
+    .query(`SELECT votes FROM reviews WHERE review_id = ${reviewId}`)
     .then((result) => {
-      return result.rows[0];
+      const currentVotes = result.rows[0].votes;
+      return db
+        .query(
+          `UPDATE reviews SET votes = $1 WHERE review_id = $2 RETURNING *`,
+          [currentVotes + voteNumber, reviewId]
+        )
+        .then((result) => {
+          return result.rows[0];
+        });
     });
 };
