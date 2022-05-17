@@ -48,3 +48,7 @@ exports.fetchReviews = () => {
       return result.rows;
     });
 };
+
+exports.fetchComments = () => {
+  console.log("model");
+};

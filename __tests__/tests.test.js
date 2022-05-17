@@ -247,3 +247,25 @@ describe("GET /api/reviews", () => {
       });
   });
 });
+
+describe("GET /api/reviews/:review_id/comments", () => {
+  it("status 200: responds with array of comments for the given review_id", () => {
+    const reviewId = 3;
+    return request(app)
+      .get(`/api/reviews/${reviewId}/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        const { review } = body;
+        expect(review).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            review_id: expect.any(Number),
+          })
+        );
+      });
+  });
+});

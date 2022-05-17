@@ -1,8 +1,8 @@
-const { response } = require("../app");
 const {
   fetchReviewsById,
   updateReviewVotes,
   fetchReviews,
+  fetchComments,
 } = require("../models/reviews.model");
 
 exports.getReviewsById = (request, response, next) => {
@@ -28,5 +28,12 @@ exports.patchReviewVotes = (request, response, next) => {
 exports.getReviews = (request, response, next) => {
   fetchReviews().then((reviews) => {
     response.status(200).send({ reviews });
+  });
+};
+
+exports.getComments = (request, response, next) => {
+  console.log("controller");
+  fetchComments().then((review) => {
+    response.status(200).send({ review });
   });
 };
