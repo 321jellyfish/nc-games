@@ -34,5 +34,16 @@ exports.updateReviewVotes = (reviewId, voteNumber) => {
 };
 
 exports.fetchReviews = () => {
-  console.log("model");
+  return db
+    .query(
+      `SELECT   u.username AS owner, r.title, r.review_id, r.category, r.review_img_url, r.created_at, r.votes, (SELECT COUNT(c.comment_id)::int AS comment_count FROM comments AS c)
+      FROM        reviews AS r
+      LEFT JOIN   users AS u
+      ON          r.owner = u.username
+    
+  `
+    )
+    .then((result) => {
+      return result.rows;
+    });
 };

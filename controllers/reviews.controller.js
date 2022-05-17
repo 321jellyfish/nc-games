@@ -1,3 +1,4 @@
+const { response } = require("../app");
 const {
   fetchReviewsById,
   updateReviewVotes,
@@ -24,7 +25,8 @@ exports.patchReviewVotes = (request, response, next) => {
     .catch(next);
 };
 
-exports.getReviews = () => {
-  console.log("controller");
-  fetchReviews();
+exports.getReviews = (request, response, next) => {
+  fetchReviews().then((reviews) => {
+    response.status(200).send({ reviews });
+  });
 };
