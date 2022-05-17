@@ -2,9 +2,17 @@ const db = require("../db/connection");
 
 exports.fetchReviewsById = (reviewId) => {
   return db
-    .query(`SELECT * FROM reviews WHERE review_id = $1;`, [reviewId])
+    .query(
+      `SELECT   r.*, COUNT(c.comment_id)::int AS comment_count
+      FROM      reviews AS r
+      LEFT JOIN comments AS c
+      ON        c.review_id = r.review_id
+      WHERE     r.review_id = $1
+      GROUP BY  r.review_id`,
+      [reviewId]
+    )
     .then((result) => {
-      if (result.rows.length === 0) {
+      if (!result.rows[0]) {
         return Promise.reject({ status: 404, msg: "Review Not Found" });
       }
       return result.rows[0];

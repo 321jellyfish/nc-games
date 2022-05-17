@@ -44,6 +44,14 @@ describe("GET /api/categories", () => {
       });
   });
 });
+
+// `SELECT   r.*, COUNT(c.comment_id)::int AS comment_count
+// FROM      reviews AS r
+// LEFT JOIN comments AS c
+// ON        c.review_id = r.review_id
+// WHERE     r.review_id = $1
+// GROUP BY  r.review_id`,
+
 describe("GET /api/reviews/:review_id", () => {
   it("status 200: responds with requested review object", () => {
     const reviewId = 1;
@@ -52,18 +60,20 @@ describe("GET /api/reviews/:review_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { review } = body;
-        expect(review).toEqual({
-          review_id: reviewId,
-          title: "Agricola",
-          category: "euro game",
-          designer: "Uwe Rosenberg",
-          owner: "mallionaire",
-          review_body: "Farmyard fun!",
-          review_img_url:
-            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
-          created_at: "2021-01-18T10:00:20.514Z",
-          votes: 1,
-        });
+        expect(review).toEqual(
+          expect.objectContaining({
+            review_id: reviewId,
+            title: "Agricola",
+            category: "euro game",
+            designer: "Uwe Rosenberg",
+            owner: "mallionaire",
+            review_body: "Farmyard fun!",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            created_at: "2021-01-18T10:00:20.514Z",
+            votes: 1,
+          })
+        );
       });
   });
   it("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
@@ -86,6 +96,28 @@ describe("GET /api/reviews/:review_id", () => {
         expect(msg).toBe("Bad Request");
       });
   });
+  it("status 200: responds with requested review object, with comment count", () => {
+    const reviewId = 3;
+    return request(app)
+      .get(`/api/reviews/${reviewId}`)
+      .expect(200)
+      .then(({ body }) => {
+        const { review } = body;
+        expect(review).toEqual({
+          review_id: reviewId,
+          title: "Ultimate Werewolf",
+          category: "social deduction",
+          designer: "Akihisa Okui",
+          owner: "bainesface",
+          review_body: "We couldn't find the werewolf!",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          created_at: "2021-01-18T10:01:41.251Z",
+          votes: 5,
+          comment_count: 3,
+        });
+      });
+  });
 });
 
 describe("PATCH /api/reviews/:review_id", () => {
@@ -98,18 +130,20 @@ describe("PATCH /api/reviews/:review_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { review } = body;
-        expect(review).toEqual({
-          review_id: 2,
-          title: "Jenga",
-          designer: "Leslie Scott",
-          owner: "philippaclaire9",
-          review_img_url:
-            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
-          review_body: "Fiddly fun for all the family",
-          category: "dexterity",
-          created_at: "2021-01-18T10:01:41.251Z",
-          votes: 8,
-        });
+        expect(review).toEqual(
+          expect.objectContaining({
+            review_id: 2,
+            title: "Jenga",
+            designer: "Leslie Scott",
+            owner: "philippaclaire9",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            review_body: "Fiddly fun for all the family",
+            category: "dexterity",
+            created_at: "2021-01-18T10:01:41.251Z",
+            votes: 8,
+          })
+        );
       });
   });
   it("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
