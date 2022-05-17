@@ -122,7 +122,7 @@ describe.only("PATCH /api/reviews/:review_id", () => {
         expect(msg).toBe("Review Not Found");
       });
   });
-  it("status 400: responds with 400 if passed something that isn't a number", () => {
+  it("status 400: responds with 400 if passed something that isn't a number as review id", () => {
     const notANumber = "wolf";
     return request(app)
       .patch(`/api/reviews/${notANumber}`)
