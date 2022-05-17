@@ -1,5 +1,7 @@
 const db = require("../db/connection");
 
 exports.selectUsers = () => {
-  console.log("model");
+  return db.query("SELECT * FROM users;").then((result) => {
+    return result.rows;
+  });
 };

@@ -1,6 +1,7 @@
 const { selectUsers } = require("../models/users.model");
 
-exports.getUsers = () => {
-  console.log("controller");
-  selectUsers();
+exports.getUsers = (request, response) => {
+  selectUsers().then((users) => {
+    response.status(200).send({ users });
+  });
 };
