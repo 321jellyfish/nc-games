@@ -49,6 +49,15 @@ exports.fetchReviews = () => {
     });
 };
 
-exports.fetchComments = () => {
-  console.log("model");
+exports.fetchComments = (reviewId) => {
+  return db
+    .query(
+      `SELECT * 
+    FROM comments
+    WHERE comment_id = $1`,
+      [reviewId]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
 };

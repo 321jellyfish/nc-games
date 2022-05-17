@@ -32,8 +32,8 @@ exports.getReviews = (request, response, next) => {
 };
 
 exports.getComments = (request, response, next) => {
-  console.log("controller");
-  fetchComments().then((review) => {
+  const { review_id: reviewId } = request.params;
+  fetchComments(reviewId).then((review) => {
     response.status(200).send({ review });
   });
 };

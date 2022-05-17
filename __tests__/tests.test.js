@@ -258,12 +258,12 @@ describe("GET /api/reviews/:review_id/comments", () => {
         const { review } = body;
         expect(review).toEqual(
           expect.objectContaining({
-            comment_id: expect.any(Number),
-            votes: expect.any(Number),
-            created_at: expect.any(String),
-            author: expect.any(String),
-            body: expect.any(String),
-            review_id: expect.any(Number),
+            comment_id: 3,
+            votes: 10,
+            created_at: "2021-01-18T10:09:48.110Z",
+            author: "philippaclaire9",
+            body: "I didn't know dogs could play games",
+            review_id: 3,
           })
         );
       });
