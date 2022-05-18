@@ -247,3 +247,73 @@ describe("GET /api/reviews", () => {
       });
   });
 });
+
+describe("GET /api/reviews/:review_id/comments", () => {
+  it("status 200: responds with array of comments for the given review_id", () => {
+    const reviewId = 3;
+    return request(app)
+      .get(`/api/reviews/${reviewId}/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        const { review } = body;
+        expect(review).toEqual(
+          expect.arrayContaining([
+            {
+              comment_id: 2,
+              votes: 13,
+              created_at: "2021-01-18T10:09:05.410Z",
+              author: "mallionaire",
+              body: "My dog loved this game too!",
+              review_id: 3,
+            },
+            {
+              comment_id: 3,
+              votes: 10,
+              created_at: "2021-01-18T10:09:48.110Z",
+              author: "philippaclaire9",
+              body: "I didn't know dogs could play games",
+              review_id: 3,
+            },
+            {
+              comment_id: 6,
+              votes: 10,
+              created_at: "2021-03-27T19:49:48.110Z",
+              author: "philippaclaire9",
+              body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
+              review_id: 3,
+            },
+          ])
+        );
+      });
+  });
+  it("status 404: responds with 'No Review Found' if passed a valid number, but one that has no corresponding review", () => {
+    const tooHighId = 10000;
+    return request(app)
+      .get(`/api/reviews/${tooHighId}/comments`)
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Review Not Found");
+      });
+  });
+  it("status 400: responds with 'Bad Request' if passed something that isn't a number", () => {
+    const notANumber = "frog";
+    return request(app)
+      .get(`/api/reviews/${notANumber}/comments`)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  it("status 200: returns array of 0, if there is a review but it contains no comments", () => {
+    const reviewId = 1;
+    return request(app)
+      .get(`/api/reviews/${reviewId}/comments`)
+      .expect(200)
+      .then(({ body }) => {
+        const { review } = body;
+        expect(review).toEqual([]);
+      });
+  });
+});
