@@ -318,7 +318,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
   });
 });
 
-describe("POST /api/reviews/:review_id/comments", () => {
+describe.only("POST /api/reviews/:review_id/comments", () => {
   it("status 201: responds with posted comment with comment_id and correct review_id if sent correct format request body", () => {
     const newComment = { username: "bainesface", body: "loved it" };
     const reviewId = 2;

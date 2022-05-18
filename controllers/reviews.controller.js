@@ -44,8 +44,12 @@ exports.getComments = (request, response, next) => {
 exports.postComment = (request, response, next) => {
   const { review_id: reviewId } = request.params;
   const { username, body: commentBody } = request.body;
-  writeComment(reviewId, username, commentBody)
-    .then((postedComment) => {
+
+  Promise.all([
+    fetchReviewsById(reviewId),
+    writeComment(reviewId, username, commentBody),
+  ])
+    .then(([, postedComment]) => {
       response.status(201).send({ postedComment });
     })
     .catch(next);
