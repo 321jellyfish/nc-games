@@ -317,3 +317,19 @@ describe("GET /api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe.only("POST /api/reviews/:review_id/comments", () => {
+  it("status 201: responds with posted comment if send correct format request body", () => {
+    const newComment = { username: "bainesface", body: "loved it" };
+    return request(app)
+      .post("/api/reviews/:review_id/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment).toEqual(
+          expect.objectContaining({ username: "bainesface", body: "loved it" })
+        );
+      });
+  });
+});

@@ -72,3 +72,7 @@ exports.fetchComments = (reviewId) => {
       return result.rows;
     });
 };
+
+exports.writeComment = () => {
+  console.log("model");
+};

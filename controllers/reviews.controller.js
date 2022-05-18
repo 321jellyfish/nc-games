@@ -3,6 +3,7 @@ const {
   updateReviewVotes,
   fetchReviews,
   fetchComments,
+  writeComment,
 } = require("../models/reviews.model");
 
 exports.getReviewsById = (request, response, next) => {
@@ -38,4 +39,11 @@ exports.getComments = (request, response, next) => {
       response.status(200).send({ review });
     })
     .catch(next);
+};
+
+exports.postComment = (request, response, next) => {
+  console.log("controller");
+  writeComment().then((comment) => {
+    response.status(201).send({ comment });
+  });
 };
