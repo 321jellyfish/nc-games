@@ -318,7 +318,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
   });
 });
 
-describe.only("POST /api/reviews/:review_id/comments", () => {
+describe("POST /api/reviews/:review_id/comments", () => {
   it("status 201: responds with posted comment if send correct format request body", () => {
     const newComment = { username: "bainesface", body: "loved it" };
     const reviewId = 2;
@@ -331,6 +331,18 @@ describe.only("POST /api/reviews/:review_id/comments", () => {
         expect(postedComment).toEqual(
           expect.objectContaining({ username: "bainesface", body: "loved it" })
         );
+      });
+  });
+  it("status 400: responds with 400 if posted comment doesn't contain both keys", () => {
+    const newComment = { username: "bainesface", commentBody: "hated it" };
+    const reviewId = 3;
+    return request(app)
+      .post(`/api/reviews/${reviewId}/comments`)
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
       });
   });
 });
