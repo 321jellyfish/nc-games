@@ -72,3 +72,18 @@ exports.fetchComments = (reviewId) => {
       return result.rows;
     });
 };
+
+exports.writeComment = (reviewId, username, commentBody) => {
+  return db
+    .query(
+      `
+    INSERT INTO comments (body, review_id, author)
+    VALUES ($1, $2, $3)
+    RETURNING *
+  `,
+      [commentBody, reviewId, username]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
+};

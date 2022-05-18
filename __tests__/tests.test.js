@@ -317,3 +317,71 @@ describe("GET /api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/reviews/:review_id/comments", () => {
+  it("status 201: responds with posted comment with comment_id and correct review_id if sent correct format request body", () => {
+    const newComment = { username: "bainesface", body: "loved it" };
+    const reviewId = 2;
+    return request(app)
+      .post(`/api/reviews/${reviewId}/comments`)
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { postedComment } = body;
+        expect(postedComment).toEqual(
+          expect.objectContaining({
+            body: "loved it",
+            author: "bainesface",
+            comment_id: 7,
+            created_at: expect.any(String),
+            review_id: 2,
+            votes: 0,
+          })
+        );
+      });
+  });
+  it("status 400: responds with 400 if posted comment doesn't contain both keys", () => {
+    const newComment = { username: "bainesface", commentBody: "hated it" };
+    const reviewId = 3;
+    return request(app)
+      .post(`/api/reviews/${reviewId}/comments`)
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  it("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
+    const tooHighId = 10000;
+    return request(app)
+      .post(`/api/reviews/${tooHighId}/comments`)
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Review Not Found");
+      });
+  });
+  it("status 404: responds with 404 if user not in database tries to post", () => {
+    const newComment = { username: "swirly_wurly", body: "loved it" };
+    const reviewId = 2;
+    return request(app)
+      .post(`/api/reviews/${reviewId}/comments`)
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("User Not Found");
+      });
+  });
+  it("status 400: responds with 'Bad Request' if passed something in path that isn't a number", () => {
+    const notANumber = "wispa";
+    return request(app)
+      .post(`/api/reviews/${notANumber}/comments`)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+});
