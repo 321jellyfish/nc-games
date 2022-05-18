@@ -76,18 +76,30 @@ exports.fetchComments = (reviewId) => {
 exports.writeComment = (reviewId, username, commentBody) => {
   return db
     .query(
-      `
+      `SELECT *
+    FROM reviews
+    WHERE review_id = $1`,
+      [reviewId]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Review Not Found" });
+      }
+      return db
+        .query(
+          `
     INSERT INTO comments (body, review_id, author)
     VALUES ($1, $2, $3)
     RETURNING *
   `,
-      [commentBody, reviewId, username]
-    )
-    .then((result) => {
-      result.rows[0];
-      const postedComment = {};
-      postedComment.username = result.rows[0].author;
-      postedComment.body = result.rows[0].body;
-      return postedComment;
+          [commentBody, reviewId, username]
+        )
+        .then((result) => {
+          result.rows[0];
+          const postedComment = {};
+          postedComment.username = result.rows[0].author;
+          postedComment.body = result.rows[0].body;
+          return postedComment;
+        });
     });
 };
