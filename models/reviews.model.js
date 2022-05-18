@@ -73,6 +73,21 @@ exports.fetchComments = (reviewId) => {
     });
 };
 
-exports.writeComment = () => {
-  console.log("model");
+exports.writeComment = (reviewId, username, commentBody) => {
+  return db
+    .query(
+      `
+    INSERT INTO comments (body, review_id, author)
+    VALUES ($1, $2, $3)
+    RETURNING *
+  `,
+      [commentBody, reviewId, username]
+    )
+    .then((result) => {
+      result.rows[0];
+      const postedComment = {};
+      postedComment.username = result.rows[0].author;
+      postedComment.body = result.rows[0].body;
+      return postedComment;
+    });
 };

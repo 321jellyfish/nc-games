@@ -42,8 +42,9 @@ exports.getComments = (request, response, next) => {
 };
 
 exports.postComment = (request, response, next) => {
-  console.log("controller");
-  writeComment().then((comment) => {
-    response.status(201).send({ comment });
+  const { review_id: reviewId } = request.params;
+  const { username, body: commentBody } = request.body;
+  writeComment(reviewId, username, commentBody).then((postedComment) => {
+    response.status(201).send({ postedComment });
   });
 };
