@@ -95,11 +95,7 @@ exports.writeComment = (reviewId, username, commentBody) => {
           [commentBody, reviewId, username]
         )
         .then((result) => {
-          result.rows[0];
-          const postedComment = {};
-          postedComment.username = result.rows[0].author;
-          postedComment.body = result.rows[0].body;
-          return postedComment;
+          return result.rows[0];
         });
     });
 };

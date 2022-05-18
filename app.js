@@ -21,7 +21,7 @@ app.get("/api/users", getUsers);
 app.patch("/api/reviews/:review_id", patchReviewVotes);
 
 app.use("/*", (request, response, next) => {
-  response.status(404).send({ msg: "Hello Not Found" });
+  response.status(404).send({ msg: "Not Found" });
 });
 
 app.use((error, request, response, next) => {
