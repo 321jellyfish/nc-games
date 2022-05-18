@@ -246,6 +246,28 @@ describe("GET /api/reviews", () => {
         expect(reviews).toBeSortedBy("created_at", { descending: true });
       });
   });
+  it("accepts query to sort reviews by any valid numeric column", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("votes", {
+          descending: true,
+        });
+      });
+  });
+  it("accepts query to sort reviews alphabetically by valid columns: title, owner, category, designer", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=designer")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("designer", {
+          descending: true,
+        });
+      });
+  });
 });
 
 describe("GET /api/reviews/:review_id/comments", () => {

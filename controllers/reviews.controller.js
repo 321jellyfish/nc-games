@@ -8,6 +8,7 @@ const {
 
 exports.getReviewsById = (request, response, next) => {
   const { review_id: reviewId } = request.params;
+
   fetchReviewsById(reviewId)
     .then((review) => {
       response.status(200).send({ review });
@@ -27,7 +28,9 @@ exports.patchReviewVotes = (request, response, next) => {
 };
 
 exports.getReviews = (request, response, next) => {
-  fetchReviews().then((reviews) => {
+  const { sort_by: sortBy } = request.query;
+
+  fetchReviews(sortBy).then((reviews) => {
     response.status(200).send({ reviews });
   });
 };

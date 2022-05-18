@@ -33,14 +33,14 @@ exports.updateReviewVotes = (reviewId, voteNumber) => {
     });
 };
 
-exports.fetchReviews = () => {
+exports.fetchReviews = (sortBy = "created_at") => {
   return db
     .query(
-      `SELECT   u.username AS owner, r.title, r.review_id, r.category, r.review_img_url, r.created_at, r.votes, (SELECT COUNT(c.comment_id)::int AS comment_count FROM comments AS c)
+      `SELECT   u.username AS owner, r.title, r.review_id, r.category, r.review_img_url, r.created_at, r.votes, r.designer, (SELECT COUNT(c.comment_id)::int AS comment_count FROM comments AS c)
       FROM        reviews AS r
       LEFT JOIN   users AS u
       ON          r.owner = u.username
-      ORDER BY    r.created_at
+      ORDER BY    r.${sortBy}
       DESC
   `
     )
