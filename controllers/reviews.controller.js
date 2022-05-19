@@ -8,6 +8,7 @@ const {
 
 exports.getReviewsById = (request, response, next) => {
   const { review_id: reviewId } = request.params;
+
   fetchReviewsById(reviewId)
     .then((review) => {
       response.status(200).send({ review });
@@ -27,9 +28,14 @@ exports.patchReviewVotes = (request, response, next) => {
 };
 
 exports.getReviews = (request, response, next) => {
-  fetchReviews().then((reviews) => {
-    response.status(200).send({ reviews });
-  });
+  const { sort_by: sortBy } = request.query;
+  const { order_by: orderBy } = request.query;
+  const { category } = request.query;
+  fetchReviews(sortBy, orderBy, category)
+    .then((reviews) => {
+      response.status(200).send({ reviews });
+    })
+    .catch(next);
 };
 
 exports.getComments = (request, response, next) => {
@@ -44,7 +50,7 @@ exports.getComments = (request, response, next) => {
 exports.postComment = (request, response, next) => {
   const { review_id: reviewId } = request.params;
   const { username, body: commentBody } = request.body;
-
+  //rewrite to one promise - first promise unnecessary
   Promise.all([
     fetchReviewsById(reviewId),
     writeComment(reviewId, username, commentBody),

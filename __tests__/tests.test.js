@@ -210,7 +210,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("GET /api/reviews", () => {
+describe.only("GET /api/reviews", () => {
   it("status 200: responds with an array of review objects", () => {
     return request(app)
       .get("/api/reviews")
@@ -244,6 +244,94 @@ describe("GET /api/reviews", () => {
       .then(({ body }) => {
         const { reviews } = body;
         expect(reviews).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  it("accepts query to sort reviews by any valid numeric column", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("votes", {
+          descending: true,
+        });
+      });
+  });
+  it("accepts query to sort reviews alphabetically by valid columns: title, owner, category, designer", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=designer")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("designer", {
+          descending: true,
+        });
+      });
+  });
+  it("accepts order to sort reviews ascending or descending", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=owner&order_by=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("owner", {
+          descending: false,
+        });
+      });
+  });
+  it("filters by category, if one is specified", () => {
+    return request(app)
+      .get("/api/reviews?category=social+deduction")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toHaveLength(11);
+        expect(reviews).toBeInstanceOf(Array);
+        expect(
+          reviews.forEach((review) => {
+            expect(review.category).toBe("social deduction");
+          })
+        );
+      });
+  });
+  it("returns by an empty array, if category with no reviews is specified", () => {
+    return request(app)
+      .get("/api/reviews?category=children%27s+games")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toHaveLength(0);
+        expect(reviews).toBeInstanceOf(Array);
+      });
+  });
+  it("status 400: if user tries to enter a non-valid sort_by query", () => {
+    const invalidSortBy = "muffin";
+    return request(app)
+      .get(`/api/reviews?sort_by=${invalidSortBy}`)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Invalid sort query");
+      });
+  });
+  it("status 400: if user tries to enter a non-valid order_by query", () => {
+    const invalidOrderBy = "crisps";
+    return request(app)
+      .get(`/api/reviews?order_by=${invalidOrderBy}`)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Invalid order query");
+      });
+  });
+  it("status 404: if user tries to enter a non-valid category in query", () => {
+    const invalidCategory = "colour";
+    return request(app)
+      .get(`/api/reviews?category=${invalidCategory}`)
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Invalid category query");
       });
   });
 });
@@ -354,6 +442,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
   });
   it("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
     const tooHighId = 10000;
+    //should add a comment
     return request(app)
       .post(`/api/reviews/${tooHighId}/comments`)
       .expect(404)
