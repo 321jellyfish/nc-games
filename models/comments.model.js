@@ -10,7 +10,7 @@ exports.deleteComment = (commentId) => {
       [commentId]
     )
     .then((result) => {
-      if (result.rowCount !== 1) {
+      if (result.rowCount === 0) {
         return Promise.reject({ status: 404, msg: "Comment not found" });
       }
     });
