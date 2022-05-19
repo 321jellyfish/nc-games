@@ -210,7 +210,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe.only("GET /api/reviews", () => {
+describe("GET /api/reviews", () => {
   it("status 200: responds with an array of review objects", () => {
     return request(app)
       .get("/api/reviews")
@@ -312,6 +312,16 @@ describe.only("GET /api/reviews", () => {
       .then(({ body }) => {
         const { msg } = body;
         expect(msg).toBe("Invalid order query");
+      });
+  });
+  it("status 404: if user tries to enter a non-valid category in query", () => {
+    const invalidCategory = "colour";
+    return request(app)
+      .get(`/api/reviews?category=${invalidCategory}`)
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Invalid category query");
       });
   });
 });
@@ -420,7 +430,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
         expect(msg).toBe("Bad Request");
       });
   });
-  it.only("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
+  it("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
     const tooHighId = 10000;
     //should add a comment
     return request(app)
