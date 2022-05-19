@@ -62,7 +62,7 @@ exports.fetchReviews = (sortBy = "created_at", orderBy = "desc", category) => {
     }
   }
   queryStr += ` ORDER BY  r.${sortBy}
-      ${order}`;
+      ${orderBy}`;
   return db.query(queryStr).then((result) => {
     return result.rows;
   });

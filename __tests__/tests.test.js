@@ -297,14 +297,14 @@ describe.only("GET /api/reviews", () => {
   it("status 400: if user tries to enter a non-valid sort_by query", () => {
     const invalidSortBy = "muffin";
     return request(app)
-      .get(`/api/reviews?order=${invalidSortBy}`)
+      .get(`/api/reviews?sort_by=${invalidSortBy}`)
       .expect(400)
       .then(({ body }) => {
         const { msg } = body;
         expect(msg).toBe("Invalid sort query");
       });
   });
-  it.only("status 400: if user tries to enter a non-valid order_by query", () => {
+  it("status 400: if user tries to enter a non-valid order_by query", () => {
     const invalidOrderBy = "crisps";
     return request(app)
       .get(`/api/reviews?order_by=${invalidOrderBy}`)
