@@ -475,9 +475,29 @@ describe("POST /api/reviews/:review_id/comments", () => {
   });
 });
 
-describe.only("DELETE /api/comments/:comment_id", () => {
+describe("DELETE /api/comments/:comment_id", () => {
   it("deletes comment if given valid comment id", () => {
     const commentId = 2;
     return request(app).delete(`/api/comments/${commentId}`).expect(204);
+  });
+  it("status 404: returns 404 if comment_id doesn't exist", () => {
+    const tooHighId = 1000;
+    return request(app)
+      .delete(`/api/comments/${tooHighId}`)
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Comment not found");
+      });
+  });
+  it("status 400: returns 400 if comment_id is not a number", () => {
+    const notANumber = "turtle";
+    return request(app)
+      .delete(`/api/comments/${notANumber}`)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Bad Request");
+      });
   });
 });
