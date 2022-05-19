@@ -210,7 +210,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("GET /api/reviews", () => {
+describe.only("GET /api/reviews", () => {
   it("status 200: responds with an array of review objects", () => {
     return request(app)
       .get("/api/reviews")
@@ -292,6 +292,16 @@ describe("GET /api/reviews", () => {
             expect(review.category).toBe("social deduction");
           })
         );
+      });
+  });
+  it("returns by an empty array, if category with no reviews is specified", () => {
+    return request(app)
+      .get("/api/reviews?category=children%27s+games")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toHaveLength(0);
+        expect(reviews).toBeInstanceOf(Array);
       });
   });
   it("status 400: if user tries to enter a non-valid sort_by query", () => {
