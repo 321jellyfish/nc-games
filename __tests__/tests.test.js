@@ -416,6 +416,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
       .expect(201)
       .then(({ body }) => {
         const { postedComment } = body;
+        console.log(postedComment);
         expect(postedComment).toEqual(
           expect.objectContaining({
             body: "loved it",
