@@ -475,7 +475,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
   });
 });
 
-describe("DELETE /api/comments/:comment_id", () => {
+describe.only("DELETE /api/comments/:comment_id", () => {
   it("deletes comment if given valid comment id", () => {
     const commentId = 2;
     return request(app).delete(`/api/comments/${commentId}`).expect(204);

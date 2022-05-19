@@ -1,6 +1,8 @@
 const { deleteComment } = require("../models/comments.model");
 
-exports.deleteCommentById = () => {
-  console.log("controller");
-  deleteComment();
+exports.deleteCommentById = (request, response, next) => {
+  const { comment_id: commentId } = request.params;
+  deleteComment(commentId).then(() => {
+    response.sendStatus(204);
+  });
 };
