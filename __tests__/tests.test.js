@@ -210,7 +210,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe.only("GET /api/reviews", () => {
+describe("GET /api/reviews", () => {
   it("status 200: responds with an array of review objects", () => {
     return request(app)
       .get("/api/reviews")
@@ -472,5 +472,12 @@ describe("POST /api/reviews/:review_id/comments", () => {
         const { msg } = body;
         expect(msg).toBe("Bad Request");
       });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  it("deletes comment if given valid comment id", () => {
+    const commentId = 2;
+    return request(app).delete(`/api/comments/${commentId}`).expect(204);
   });
 });

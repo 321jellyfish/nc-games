@@ -1,5 +1,6 @@
 const express = require("express");
 const { getCategories } = require("./controllers/categories.controller");
+const { deleteCommentById } = require("./controllers/comments.controller");
 const {
   getReviewsById,
   patchReviewVotes,
@@ -24,6 +25,7 @@ app.get("/api/reviews", getReviews);
 app.post("/api/reviews/:review_id/comments", postComment);
 app.get("/api/users", getUsers);
 app.patch("/api/reviews/:review_id", patchReviewVotes);
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.use("/*", (request, response, next) => {
   response.status(404).send({ msg: "Not Found" });
