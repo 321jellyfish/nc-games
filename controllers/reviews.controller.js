@@ -29,9 +29,9 @@ exports.patchReviewVotes = (request, response, next) => {
 
 exports.getReviews = (request, response, next) => {
   const { sort_by: sortBy } = request.query;
-  const { order } = request.query;
+  const { order_by: orderBy } = request.query;
   const { category } = request.query;
-  fetchReviews(sortBy, order, category)
+  fetchReviews(sortBy, orderBy, category)
     .then((reviews) => {
       response.status(200).send({ reviews });
     })

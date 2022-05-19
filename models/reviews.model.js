@@ -33,8 +33,8 @@ exports.updateReviewVotes = (reviewId, voteNumber) => {
     });
 };
 
-exports.fetchReviews = (sortBy = "created_at", order = "desc", category) => {
-  if (!["asc", "desc"].includes(order)) {
+exports.fetchReviews = (sortBy = "created_at", orderBy = "desc", category) => {
+  if (!["asc", "desc"].includes(orderBy)) {
     return Promise.reject({ status: 400, msg: "Invalid order query" });
   }
   if (

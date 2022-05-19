@@ -270,7 +270,7 @@ describe.only("GET /api/reviews", () => {
   });
   it("accepts order to sort reviews ascending or descending", () => {
     return request(app)
-      .get("/api/reviews?sort_by=owner&order=asc")
+      .get("/api/reviews?sort_by=owner&order_by=asc")
       .expect(200)
       .then(({ body }) => {
         const { reviews } = body;
@@ -307,7 +307,7 @@ describe.only("GET /api/reviews", () => {
   it.only("status 400: if user tries to enter a non-valid order_by query", () => {
     const invalidOrderBy = "crisps";
     return request(app)
-      .get(`/api/reviews?order=${invalidOrderBy}`)
+      .get(`/api/reviews?order_by=${invalidOrderBy}`)
       .expect(400)
       .then(({ body }) => {
         const { msg } = body;
