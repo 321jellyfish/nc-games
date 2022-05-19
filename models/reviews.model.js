@@ -34,6 +34,9 @@ exports.updateReviewVotes = (reviewId, voteNumber) => {
 };
 
 exports.fetchReviews = (sortBy = "created_at", order = "desc", category) => {
+  if (!["asc", "desc"].includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid order query" });
+  }
   if (
     !["votes", "created_at", "title", "owner", "category", "designer"].includes(
       sortBy
@@ -41,6 +44,7 @@ exports.fetchReviews = (sortBy = "created_at", order = "desc", category) => {
   ) {
     return Promise.reject({ status: 400, msg: "Invalid sort query" });
   }
+
   const queryValues = [];
   let queryStr = `SELECT   u.username AS owner, r.title, r.review_id, r.category, r.review_img_url, r.created_at, r.votes, r.designer, (SELECT COUNT(c.comment_id)::int AS comment_count FROM comments AS c)
   FROM        reviews AS r
