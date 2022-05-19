@@ -210,7 +210,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe("GET /api/reviews", () => {
+describe.only("GET /api/reviews", () => {
   it("status 200: responds with an array of review objects", () => {
     return request(app)
       .get("/api/reviews")
@@ -266,6 +266,42 @@ describe("GET /api/reviews", () => {
         expect(reviews).toBeSortedBy("designer", {
           descending: true,
         });
+      });
+  });
+  it("accepts order to sort reviews ascending or descending", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=owner&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toBeSortedBy("owner", {
+          descending: false,
+        });
+      });
+  });
+  it("filters by category, if one is specified", () => {
+    return request(app)
+      .get("/api/reviews?category=social+deduction")
+      .expect(200)
+      .then(({ body }) => {
+        const { reviews } = body;
+        expect(reviews).toHaveLength(11);
+        expect(reviews).toBeInstanceOf(Array);
+        expect(
+          reviews.forEach((review) => {
+            expect(review.category).toBe("social deduction");
+          })
+        );
+      });
+  });
+  it.only("status 400: if user tries to enter a non-valid sort_by query", () => {
+    const invalidSortBy = "muffin";
+    return request(app)
+      .get(`/api/reviews?sort_by=${invalidSortBy}`)
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Invalid sort query");
       });
   });
 });
@@ -374,8 +410,9 @@ describe("POST /api/reviews/:review_id/comments", () => {
         expect(msg).toBe("Bad Request");
       });
   });
-  it("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
+  it.only("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
     const tooHighId = 10000;
+    //should add a comment
     return request(app)
       .post(`/api/reviews/${tooHighId}/comments`)
       .expect(404)

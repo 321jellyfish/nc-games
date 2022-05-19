@@ -33,21 +33,53 @@ exports.updateReviewVotes = (reviewId, voteNumber) => {
     });
 };
 
-exports.fetchReviews = (sortBy = "created_at") => {
-  return db
-    .query(
-      `SELECT   u.username AS owner, r.title, r.review_id, r.category, r.review_img_url, r.created_at, r.votes, r.designer, (SELECT COUNT(c.comment_id)::int AS comment_count FROM comments AS c)
-      FROM        reviews AS r
-      LEFT JOIN   users AS u
-      ON          r.owner = u.username
-      ORDER BY    r.${sortBy}
-      DESC
-  `
+exports.fetchReviews = (sortBy = "created_at", order = "desc", category) => {
+  if (
+    !["votes", "created_at", "title", "owner", "category", "designer"].includes(
+      sortBy
     )
-    .then((result) => {
-      return result.rows;
-    });
+  ) {
+    return Promise.reject({ status: 400, msg: "Invalid sort query" });
+  }
+  const queryValues = [];
+  let queryStr = `SELECT   u.username AS owner, r.title, r.review_id, r.category, r.review_img_url, r.created_at, r.votes, r.designer, (SELECT COUNT(c.comment_id)::int AS comment_count FROM comments AS c)
+  FROM        reviews AS r
+  LEFT JOIN   users AS u
+  ON          r.owner = u.username`;
+
+  if (category) {
+    if (
+      category === "euro game" ||
+      category === "dexterity" ||
+      category === "social deduction"
+    ) {
+      queryValues.push(category);
+      queryStr += ` WHERE r.category = '${category}'`;
+    }
+  }
+  queryStr += ` ORDER BY  r.${sortBy}
+      ${order}`;
+  return db.query(queryStr).then((result) => {
+    return result.rows;
+  });
 };
+
+// exports.fetchReviews = (sortBy = "created_at", order = "desc", category) => {
+//   console.log(category);
+//   return db
+//     .query(
+//       `SELECT   u.username AS owner, r.title, r.review_id, r.category, r.review_img_url, r.created_at, r.votes, r.designer, (SELECT COUNT(c.comment_id)::int AS comment_count FROM comments AS c)
+//       FROM        reviews AS r
+//       LEFT JOIN   users AS u
+//       ON          r.owner = u.username
+//       ORDER BY    r.${sortBy}
+//       ${order}
+//   `
+//     )
+//     .then((result) => {
+//       return result.rows;
+//     });
+// };
 
 exports.fetchComments = (reviewId) => {
   return db
