@@ -51,11 +51,17 @@ exports.postComment = (request, response, next) => {
   const { review_id: reviewId } = request.params;
   const { username, body: commentBody } = request.body;
   //rewrite to one promise - first promise unnecessary
-  Promise.all([
-    fetchReviewsById(reviewId),
-    writeComment(reviewId, username, commentBody),
-  ])
-    .then(([, postedComment]) => {
+  // Promise.all([
+  //   fetchReviewsById(reviewId),
+  //   writeComment(reviewId, username, commentBody),
+  // ])
+  //   .then(([, postedComment]) => {
+  //     response.status(201).send({ postedComment });
+  //   })
+  //   .catch(next);
+
+  writeComment(reviewId, username, commentBody)
+    .then((postedComment) => {
       response.status(201).send({ postedComment });
     })
     .catch(next);
