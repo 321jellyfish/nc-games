@@ -16,7 +16,7 @@
   },
   "GET /api/reviews": {
     "description": "serves an array of all reviews",
-    "queries": ["category", "sort_by", "order"],
+    "queries": ["category", "sort_by", "order_by"],
     "exampleResponse": {
       "reviews": [
         {
@@ -40,6 +40,11 @@
           "name": "haz",
           "avatar_url":
           "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        },
+        {
+          "username": "philippaclaire9",
+          "name": "philippa",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
         }
       ]
     }
@@ -104,7 +109,7 @@
         }
       ]
     }
-  }
+  },
   "POST /api/reviews/:review_id/comments": {
     "description": "responds with posted comment if sent new comment in an object with keys username and body",
     "queries": [],
@@ -117,5 +122,9 @@
             "review_id": "2",
             "votes": "0"
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comment if given valid comment id, returns 204 if successful",
+    "queries": []
   }
 }
