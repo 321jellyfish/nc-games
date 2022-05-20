@@ -9,20 +9,20 @@
       "categories": [
         {
           "description": "Players attempt to uncover each other's hidden role",
-          "slug": "Social deduction"
+          "slug": "social deduction"
         }
       ]
     }
   },
   "GET /api/reviews": {
     "description": "serves an array of all reviews",
-    "queries": ["category", "sort_by", "order"],
+    "queries": ["category", "sort_by", "order_by"],
     "exampleResponse": {
       "reviews": [
         {
           "title": "One Night Ultimate Werewolf",
           "designer": "Akihisa Okui",
-          "owner": "happyamy2016",
+          "owner": "mallionaire",
           "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
           "category": "hidden-roles",
           "created_at": 1610964101251,
@@ -30,5 +30,103 @@
         }
       ]
     }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "mallionaire",
+          "name": "haz",
+          "avatar_url":
+          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        },
+        {
+          "username": "philippaclaire9",
+          "name": "philippa",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+        }
+      ]
+    }
+  },
+  "GET /api/reviews/:review_id": {
+    "description" : "serves review object with specified review_id",
+    "queries": [],
+    "exampleResponse" : {
+      "review": {
+        "review_id": "1",
+          "title": "Agricola",
+          "category": "euro game",
+          "designer": "Uwe Rosenberg",
+          "owner": "mallionaire",
+          "review_body": "Farmyard fun!",
+          "review_img_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          "created_at": "2021-01-18T10:00:20.514Z",
+          "votes": "1",
+          "comment_count": "0"
+      }
+    }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description" : "updates votes of specified review by number of votes sent on request and returns updated review",
+    "queries": [],
+    "exampleRequest": { "inc_votes": 3 },
+    "exampleResponse": {
+      "review": {
+        "review_id": "2",
+        "title": "Jenga",
+        "designer": "Leslie Scott",
+        "owner": "philippaclaire9",
+        "review_img_url":
+          "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          "review_body": "Fiddly fun for all the family",
+          "category": "dexterity",
+          "created_at": "2021-01-18T10:01:41.251Z",
+          "votes": "8"
+      }
+    }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "responds with array of comments for the given review_id",
+    "queries": [],
+    "exampleResponse": {
+      "review" : [
+        {
+          "comment_id": "2",
+          "votes": "13",
+          "created_at": "2021-01-18T10:09:05.410Z",
+          "author": "mallionaire",
+          "body": "My dog loved this game too!",
+          "review_id": "3"
+        },
+        {
+          "comment_id": "3",
+          "votes": "10",
+          "created_at": "2021-01-18T10:09:48.110Z",
+          "author": "philippaclaire9",
+          "body": "I didn't know dogs could play games",
+          "review_id": "3"
+        }
+      ]
+    }
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "responds with posted comment if sent new comment in an object with keys username and body",
+    "queries": [],
+    "exampleRequest": { "username": "bainesface", "body": "loved it" },
+    "exampleResponse": {
+      "body": "loved it",
+            "author": "bainesface",
+            "comment_id": "7",
+            "created_at": "2022-05-19T22:23:40.331Z",
+            "review_id": "2",
+            "votes": "0"
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comment if given valid comment id, returns 204 if successful",
+    "queries": []
   }
 }
+
+
