@@ -2,6 +2,8 @@
 
 [Linked to hosted version](https://board-game-fun.herokuapp.com/api)
 
+This will take you to a list of all endpoints and expected request formats and expected responses.
+
 ## Summary of Project
 
 This server is a backend API, which allows users to retrieve and interact with information about various boardgames, including reviews, comments, categories and user data. For information about all the endpoints and how to interact with them please visit the /api on the hosted version.
