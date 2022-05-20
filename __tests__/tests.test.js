@@ -442,9 +442,10 @@ describe("POST /api/reviews/:review_id/comments", () => {
   });
   it("status 404: responds with 404 if passed a valid number, but there is no review with that number", () => {
     const tooHighId = 10000;
-    //should add a comment
+    const newComment = { username: "bainesface", body: "it was OK" };
     return request(app)
       .post(`/api/reviews/${tooHighId}/comments`)
+      .send(newComment)
       .expect(404)
       .then(({ body }) => {
         const { msg } = body;
@@ -502,7 +503,7 @@ describe("DELETE /api/comments/:comment_id", () => {
   });
 });
 
-describe.only("GET /api", () => {
+describe("GET /api", () => {
   it("returns JSON describing all endpoints on API", () => {
     return request(app)
       .get("/api")
