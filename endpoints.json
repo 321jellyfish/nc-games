@@ -70,7 +70,7 @@
   "PATCH /api/reviews/:review_id": {
     "description" : "updates votes of specified review by number of votes sent on request and returns updated review",
     "queries": [],
-    "exampleRequest": "{ inc_votes: 3 }",
+    "exampleRequest": { "inc_votes": 3 },
     "exampleResponse": {
       "review": {
         "review_id": "2",
@@ -113,7 +113,7 @@
   "POST /api/reviews/:review_id/comments": {
     "description": "responds with posted comment if sent new comment in an object with keys username and body",
     "queries": [],
-    "exampleRequest": "{ username: bainesface, body: loved it }",
+    "exampleRequest": { "username": "bainesface", "body": "loved it" },
     "exampleResponse": {
       "body": "loved it",
             "author": "bainesface",
@@ -128,3 +128,5 @@
     "queries": []
   }
 }
+
+
